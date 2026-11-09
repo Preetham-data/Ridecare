@@ -1,0 +1,591 @@
+/* ==========================================================================
+   Motorcycle Crash Detector - Modern Mobile Dark Theme Stylesheet
+   ========================================================================== */
+
+/* CSS Reset & Base Variables */
+:root {
+  --bg-primary: #0f172a;       /* Slate 900 */
+  --bg-secondary: #1e293b;     /* Slate 800 */
+  --bg-card: #1e293b;
+  --bg-card-border: #334155;  /* Slate 700 */
+  --text-main: #f8fafc;        /* Slate 50 */
+  --text-muted: #94a3b8;       /* Slate 400 */
+  --accent-green: #22c55e;     /* Emerald 500 */
+  --accent-green-hover: #16a34a;
+  --accent-red: #ef4444;       /* Red 500 */
+  --accent-amber: #f59e0b;     /* Amber 500 */
+  --accent-blue: #38bdf8;      /* Sky 400 */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", "Roboto Mono", Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  touch-action: manipulation;
+}
+
+/* Main Container: Mobile phone viewport centered layout */
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+
+/* ==========================================================================
+   Header Section
+   ========================================================================== */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--bg-card-border);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.app-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text-main);
+}
+
+.app-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Status Pill */
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+}
+
+.status-idle {
+  background-color: #334155;
+  color: #cbd5e1;
+}
+
+.status-active {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+.status-warning {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  animation: pulse-warn 1s infinite;
+}
+
+/* ==========================================================================
+   Info Bar (Screen Lock, GPS, Sensors)
+   ========================================================================== */
+.info-bar {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(30, 41, 59, 0.6);
+  border: 1px solid var(--bg-card-border);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+}
+
+.info-item {
+  display: flex;
+  gap: 4px;
+}
+
+.info-label {
+  color: var(--text-muted);
+}
+
+.info-value {
+  font-weight: 600;
+  color: var(--accent-blue);
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  font-family: inherit;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.1s ease, filter 0.2s ease, background-color 0.2s ease;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Big Start/Stop Ride Button */
+.btn-start {
+  width: 100%;
+  height: 64px;
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+}
+
+.btn-start:hover {
+  filter: brightness(1.1);
+}
+
+.btn-stop {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+/* Demo Button */
+.btn-warning {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  background-color: #334155;
+  color: #fbbf24;
+  border: 1px dashed #f59e0b;
+}
+
+.btn-warning:hover {
+  background-color: #3b4d66;
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   Cards & Telemetry
+   ========================================================================== */
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Accelerometer 3-Axis Grid */
+.axes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.axis-box {
+  background-color: #0f172a;
+  border: 1px solid var(--bg-card-border);
+  border-radius: 10px;
+  padding: 10px 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.axis-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.axis-value {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #38bdf8;
+  font-variant-numeric: tabular-nums;
+}
+
+.axis-unit {
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+/* Total Magnitude Meter */
+.magnitude-wrapper {
+  background-color: #0f172a;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid var(--bg-card-border);
+}
+
+.magnitude-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.mag-title {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.mag-value {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.meter-bar-container {
+  width: 100%;
+  height: 10px;
+  background-color: #1e293b;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e 0%, #eab308 65%, #ef4444 100%);
+  border-radius: 9999px;
+  transition: width 0.08s linear;
+}
+
+.meter-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   Algorithm Status & Progress
+   ========================================================================== */
+.detector-status-box {
+  background-color: #0f172a;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid var(--bg-card-border);
+  margin-bottom: 8px;
+}
+
+.detector-status-text {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+}
+
+.stillness-timer-box {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #1e293b;
+  font-size: 0.8rem;
+  color: #fbbf24;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stillness-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #334155;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stillness-fill {
+  height: 100%;
+  width: 0%;
+  background-color: #f59e0b;
+  transition: width 0.1s linear;
+}
+
+.threshold-info {
+  color: #64748b;
+}
+
+/* Location details */
+.location-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.loc-row {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.loc-row strong {
+  font-family: var(--font-mono);
+  color: #cbd5e1;
+}
+
+/* Demo Section */
+.demo-section {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.demo-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ==========================================================================
+   FULLSCREEN EMERGENCY CRASH OVERLAY
+   ========================================================================== */
+.crash-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999999;
+  background-color: #dc2626;
+  animation: pulse-danger 0.8s infinite alternate ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.crash-modal-content {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.crash-siren-icon {
+  font-size: 3.5rem;
+  display: inline-block;
+  animation: siren-shake 0.4s infinite;
+}
+
+.crash-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 1px;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+  margin-top: 4px;
+}
+
+.crash-subtitle {
+  font-size: 1rem;
+  color: #fecaca;
+  font-weight: 600;
+}
+
+/* Big Countdown Circle */
+.countdown-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 4px solid #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+}
+
+.countdown-number {
+  font-family: var(--font-mono);
+  font-size: 4.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.countdown-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fca5a5;
+  letter-spacing: 1px;
+}
+
+.emergency-notice {
+  font-size: 0.88rem;
+  color: #ffffff;
+  line-height: 1.4;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 14px;
+  border-radius: 8px;
+}
+
+/* HUGE GREEN "I'M OK" BUTTON */
+.btn-im-ok {
+  width: 100%;
+  height: 84px;
+  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  color: #ffffff;
+  border: 3px solid #bbf7d0;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(34, 197, 94, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  animation: bounce-attention 1.5s infinite;
+}
+
+.btn-im-ok:active {
+  transform: scale(0.95);
+  filter: brightness(0.9);
+}
+
+.im-ok-icon {
+  display: none;
+}
+
+.im-ok-text {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.im-ok-subtext {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #dcfce7;
+  letter-spacing: 0.5px;
+}
+
+/* Post-Countdown SOS Box */
+.sos-box {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: 2px solid #ef4444;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sos-box h2 {
+  font-size: 1.1rem;
+  color: #ef4444;
+}
+
+.sos-box p {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+/* Helper Class */
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Keyframe Animations
+   ========================================================================== */
+@keyframes pulse-danger {
+  0% {
+    background-color: #991b1b;
+  }
+  100% {
+    background-color: #dc2626;
+  }
+}
+
+@keyframes pulse-warn {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes siren-shake {
+  0% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+  100% { transform: rotate(-8deg); }
+}
+
+@keyframes bounce-attention {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}

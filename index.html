@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f172a">
+  <title>Motorcycle Crash Detector</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Main Application Wrapper -->
+  <main class="app-container">
+
+    <!-- Top Navigation / Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <span class="app-icon">🏍️</span>
+        <div>
+          <h1 class="app-title">CrashGuard</h1>
+          <p class="app-subtitle">Motorcycle Safety System</p>
+        </div>
+      </div>
+      <!-- Ride Status Badge -->
+      <div id="statusBadge" class="status-badge status-idle">IDLE</div>
+    </header>
+
+    <!-- Screen Wake Lock & Sensor Status Alert -->
+    <section class="info-bar">
+      <div class="info-item">
+        <span class="info-label">Screen Lock:</span>
+        <span id="wakeLockStatus" class="info-value">Inactive</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">GPS:</span>
+        <span id="gpsStatus" class="info-value">Off</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Sensor:</span>
+        <span id="sensorStatus" class="info-value">Waiting</span>
+      </div>
+    </section>
+
+    <!-- Primary Action: Start / Stop Ride -->
+    <section class="ride-action-section">
+      <button id="toggleRideBtn" class="btn btn-primary btn-start">
+        <span class="btn-icon">▶</span>
+        <span id="toggleRideText">START RIDE</span>
+      </button>
+    </section>
+
+    <!-- Live Telemetry / Accelerometer Display -->
+    <section class="card telemetry-card">
+      <h2 class="card-title">Live Accelerometer</h2>
+      
+      <!-- Real-time Axes Values -->
+      <div class="axes-grid">
+        <div class="axis-box">
+          <span class="axis-name">X (Lateral)</span>
+          <span id="accX" class="axis-value">0.00</span>
+          <span class="axis-unit">m/s²</span>
+        </div>
+        <div class="axis-box">
+          <span class="axis-name">Y (Longitudinal)</span>
+          <span id="accY" class="axis-value">0.00</span>
+          <span class="axis-unit">m/s²</span>
+        </div>
+        <div class="axis-box">
+          <span class="axis-name">Z (Vertical)</span>
+          <span id="accZ" class="axis-value">0.00</span>
+          <span class="axis-unit">m/s²</span>
+        </div>
+      </div>
+
+      <!-- Total Acceleration Magnitude Gauge -->
+      <div class="magnitude-wrapper">
+        <div class="magnitude-header">
+          <span class="mag-title">Total Force (Magnitude):</span>
+          <span id="accMagnitude" class="mag-value">0.00 m/s² (0.00 G)</span>
+        </div>
+        <div class="meter-bar-container">
+          <div id="meterFill" class="meter-fill" style="width: 0%;"></div>
+        </div>
+        <div class="meter-scale">
+          <span>0 G</span>
+          <span>1 G (Rest)</span>
+          <span>3 G (Impact Alert)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detection Algorithm Status & Explanation -->
+    <section class="card algorithm-card">
+      <h2 class="card-title">Detector State</h2>
+      <div class="detector-status-box">
+        <div id="detectorStatusText" class="detector-status-text">Ride is not active. Press "Start Ride" to monitor.</div>
+        <div id="stillnessTimerBox" class="stillness-timer-box hidden">
+          <span>Verifying post-impact stillness:</span>
+          <div class="stillness-progress-bar">
+            <div id="stillnessProgressFill" class="stillness-fill"></div>
+          </div>
+          <span id="stillnessSecondsText">0.0s / 5.0s</span>
+        </div>
+      </div>
+      <div class="threshold-info">
+        <small>⚡ Jolt trigger: &gt; 28 m/s² (~2.9 G) &bull; Stillness window: 5.0s</small>
+      </div>
+    </section>
+
+    <!-- Location / Coordinates Card -->
+    <section class="card location-card">
+      <h2 class="card-title">Location (for Emergency Dispatch)</h2>
+      <div class="location-details">
+        <div class="loc-row">
+          <span>Latitude / Longitude:</span>
+          <strong id="gpsCoordinates">Not acquired</strong>
+        </div>
+        <div class="loc-row">
+          <span>Speed:</span>
+          <strong id="gpsSpeed">-- km/h</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- Demo / Simulation Button -->
+    <section class="demo-section">
+      <button id="simulateCrashBtn" class="btn btn-warning">
+        ⚠️ Simulate Crash (Instant Demo)
+      </button>
+      <p class="demo-note">Use this button to test the 15s alarm, vibration, sound, and the "I'M OK" button without throwing your phone.</p>
+    </section>
+
+  </main>
+
+  <!-- ==============================================
+       FULLSCREEN RED EMERGENCY CRASH OVERLAY
+       ============================================== -->
+  <aside id="crashOverlay" class="crash-overlay hidden" aria-live="assertive">
+    <div class="crash-modal-content">
+      
+      <!-- Warning Header -->
+      <div class="crash-header">
+        <span class="crash-siren-icon">🚨</span>
+        <h1 class="crash-title">CRASH DETECTED</h1>
+        <p class="crash-subtitle">Impact detected followed by no movement</p>
+      </div>
+
+      <!-- 15-Second Countdown Display -->
+      <div class="countdown-circle">
+        <span id="countdownNumber" class="countdown-number">15</span>
+        <span class="countdown-label">SECONDS LEFT</span>
+      </div>
+
+      <p class="emergency-notice">
+        Loud alarm &amp; vibration active. An emergency alert will be dispatched when the timer reaches zero.
+      </p>
+
+      <!-- Huge Green "I'M OK" Button to Cancel -->
+      <button id="cancelCrashBtn" class="btn btn-im-ok">
+        <span class="im-ok-icon">✓</span>
+        <span class="im-ok-text">I'M OK</span>
+        <span class="im-ok-subtext">(Cancel Alarm)</span>
+      </button>
+
+      <!-- Post-Countdown Dispatched Alert Box (Shown if timer hits 0) -->
+      <div id="sosDispatchedBox" class="sos-box hidden">
+        <h2>⚠️ EMERGENCY ALERT DISPATCHED</h2>
+        <p>Distress message with GPS coordinates has been simulated for your emergency contacts.</p>
+        <button id="sosResetBtn" class="btn btn-secondary">Reset System</button>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Plain JavaScript Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
